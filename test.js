@@ -13,8 +13,8 @@ casper.test.begin('The schools autocomplete should be fully functional', 7, func
 		test.assertExists('.ncaa-nav-primary', 'The NCAA.com primary nav parent element exists.');
 		test.assertNotVisible('.school_nav.content-panel', 'The "Schools" dropdown is closed by default.');
 
-		// Simulating mouseover/hover events in Phantom is tricky & unreliable so we are going to force the dropdown open
-		// manually...
+		// Simulating mouseover/hover events in Phantom is tricky & unreliable so we are going to cheat a bit and
+		// force the dropdown open manually...
 		this.evaluate(function () {
 			jQuery('.school_nav.content-panel').show(); // We know jQuery is loaded in the remote DOM
 		});
@@ -45,6 +45,8 @@ casper.test.begin('The schools autocomplete should be fully functional', 7, func
 	casper.then(function () {
 		test.assertVisible('.ui-autocomplete.ui-menu.ui-widget', 'The JQuery UI autocomplete results drawer is visible after filling the autocomplete box.');
 
+		// Casper's test.assertElementCount() is looking for an exact number of elements but we just want
+		// to test that there is more than one. This is easy to do using a custom assertEval() function:
 		test.assertEval(function () {
 			return (jQuery('.ui-autocomplete.ui-menu.ui-widget li.ui-menu-item').length >= 1);
 		}, 'There is at least one autocomplete result.');
